@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card bg-black border border-info shadow-sm">
+                <div class="card-header text-white fw-bold">
+                    Order #{{ order.id }} - ${{ order.amount_paid }}
+                </div>
+                <div class="card-body text-white-50">
+
+                    <p>Email: {{ order.email }}</p>
+                    {% if order.date_shipped %}
+                        <p>Date Shipped: {{ order.date_shipped }}</p>
+                    {% else %}
+                        <p>Date Ordered: {{ order.date_ordered }}</p>
+                    {% endif %}
+
+                    <p>{{ order.full_name }}</p>
+                    <pre class="text-white-50">{{ order.shipping_address }}</pre>
+
+                    <hr class="border-info">
+
+                    {% for item in items %}
+                        <p>{{ item.product }} - {{ item.quantity }} - ${{ item.price }}</p>
+                    {% endfor %}
+
+                    <div class="d-flex gap-2 mt-3">
+    {% if not order.shipped %}
+    <form method="POST" class="flex-fill">
+        {% csrf_token %}
+        <input type="hidden" name="shipping_status" value="true">
+        <button type="submit" class="btn btn-outline-info w-100 action-btn neon-hover">
+            Ship Order
+        </button>
+    </form>
+    {% else %}
+    <form method="POST" class="flex-fill">
+        {% csrf_token %}
+        <input type="hidden" name="shipping_status" value="false">
+        <button type="submit" class="btn btn-outline-danger w-100 action-btn neon-hover">
+            Unship
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+.action-btn {
+    min-width: 120px;
+    white-space: nowrap; /* Prevent wrapping */
+}
+</style>
+
+{% endblock %}

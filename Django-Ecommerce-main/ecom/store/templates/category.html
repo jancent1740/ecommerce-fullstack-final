@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ================= HERO SECTION ================= -->
+<header class="honkai-hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+
+    <div class="container px-4 px-lg-5 h-100 hero-content">
+        <div class="text-center text-white">
+            <div class="hero-tag">
+                <i class="bi bi-lightning-charge-fill"></i>
+                Category
+            </div>
+
+            <h1 class="hero-title">{{ category }}</h1>
+
+            <p class="hero-subtitle">
+                Browse the finest weapons in this category
+            </p>
+
+            <div class="hero-actions mt-4">
+                <a href="{% url 'category_summary' %}" class="hero-btn primary">
+                    <i class="bi bi-grid-fill"></i> All Weapons
+                </a>
+                <a href="{% url 'search' %}" class="hero-btn secondary">
+                    <i class="bi bi-search"></i> Weapon Scan
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ================= PRODUCT CARDS ================= -->
+<section class="py-5 bg-dark">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+            {% for product in products %}
+            <div class="col mb-5">
+                <div class="card h-100 bg-black text-white border border-info position-relative">
+
+                    {% if product.is_sale %}
+                    <!-- SALE BADGE -->
+                    <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem; z-index:10; font-weight:700;">
+                        SALE
+                    </div>
+                    {% endif %}
+
+                    <!-- Product image -->
+                    <img class="card-img-top"
+                         src="{{ product.image.url }}"
+                         alt="{{ product.name }}" />
+
+                    <!-- Product details -->
+                    <div class="card-body p-4 text-center">
+                        <h5 class="fw-bolder">{{ product.name }}</h5>
+
+                        {% if product.is_sale %}
+                        <div class="mb-2">
+                            <strike class="text-muted">₱{{ product.price }}</strike>
+                            <span class="text-danger fw-bold">₱{{ product.sale_price }}</span>
+                        </div>
+                        <div class="text-warning small fw-bold mb-2">Limited Time Offer!</div>
+                        {% else %}
+                        <span class="text-info">₱{{ product.price }}</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
+                        <a class="btn btn-outline-info mt-auto"
+                           href="{% url 'product' product.id %}">
+                            View Weapon
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+/* === HERO CORE === */
+.honkai-hero {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+    background: #0b0f1a;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(11,15,26,0.85), rgba(11,15,26,0.95)),
+        url("{% static 'assets/Background.jpg' %}") center/cover no-repeat;
+    z-index: 0;
+}
+
+.hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(93,169,233,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(93,169,233,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* === TEXT === */
+.hero-tag {
+    display: inline-block;
+    padding: 8px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #5da9e9;
+    border: 1px solid rgba(93,169,233,0.4);
+    border-radius: 30px;
+    background: rgba(93,169,233,0.08);
+    box-shadow: 0 0 18px rgba(93,169,233,0.3);
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-shadow: 0 0 30px rgba(93,169,233,0.9);
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 1px;
+}
+
+/* === BUTTONS === */
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.hero-btn {
+    padding: 14px 26px;
+    border-radius: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.hero-btn.primary {
+    background: linear-gradient(135deg, #5da9e9, #667eea);
+    color: white;
+    box-shadow: 0 0 25px rgba(93,169,233,0.6);
+}
+
+.hero-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 35px rgba(93,169,233,0.9);
+}
+
+.hero-btn.secondary {
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    background: rgba(255,255,255,0.08);
+}
+
+.hero-btn.secondary:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.4rem;
+    }
+    .hero-actions {
+        flex-direction: column;
+    }
+}
+</style>
+
+{% endblock %}

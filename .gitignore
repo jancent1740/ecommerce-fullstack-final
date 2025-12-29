@@ -1,0 +1,19 @@
+# Python junk
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Django junk
+db.sqlite3
+staticfiles/
+media/
+.env
+
+# IDE junk
+.idea/
+.vscode/
+
+# Docker junk
+.dockerdata/

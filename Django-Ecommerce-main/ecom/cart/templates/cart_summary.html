@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ================= CART HERO ================= -->
+<section class="cart-hero">
+    <div class="container text-center text-white">
+        <h1 class="cart-title">Shopping Cart</h1>
+        <p class="cart-subtitle">Manage your divine weapons before deployment</p>
+    </div>
+</section>
+
+<div class="container my-5">
+    {% if cart_products %}
+        {% for product in cart_products %}
+            <div class="cart-card mb-4">
+                <div class="row g-0 align-items-center">
+                    <!-- Product Image -->
+                    <div class="col-md-4">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="cart-product-img">
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="col-md-8 cart-product-info">
+                        <h3 class="weapon-name">{{ product.name }}</h3>
+                        <p class="weapon-description">{{ product.description }}</p>
+
+                        {% if product.is_sale %}
+                            <div class="sale-pricing mb-2">
+                                <span class="old-price">₱{{ product.price }}</span>
+                                <span class="sale-price">₱{{ product.sale_price }}</span>
+                                <div class="limited-offer">Limited Time Offer!</div>
+                            </div>
+                        {% else %}
+                            <div class="regular-price mb-2">₱{{ product.price }}</div>
+                        {% endif %}
+
+                        <!-- Quantity Selector -->
+                        <div class="d-flex align-items-center mb-3">
+                            <label for="select{{product.id}}" class="me-2 fw-bold">Quantity:</label>
+                            <select class="form-select form-select-sm w-auto" id="select{{product.id}}">
+                                {% for key, value in quantities.items %}
+                                    {% if key == product.id|stringformat:"s" %}
+                                        <option selected>{{ value }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for i in "12345"|make_list %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-3 flex-wrap mb-2">
+                            <button type="button" data-index="{{product.id}}" class="btn btn-outline-info mt-auto update-cart">
+                                Update
+                            </button>
+                            <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <!-- Glowing Total Panel -->
+        <div class="total-panel p-4 mt-4 text-white text-end rounded">
+            <h3>Total: ₱{{ totals }}</h3>
+            <a href="{% url 'checkout' %}" class="btn btn-honkai btn-checkout btn-lg">Proceed to Checkout</a>
+        </div>
+
+    {% else %}
+        <div class="text-center text-white py-5">
+            <h4>Your cart is empty...</h4>
+            <a href="{% url 'home' %}" class="btn btn-honkai btn-back mt-3">Back to Armory</a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- ================= STYLES ================= -->
+<style>
+/* HERO */
+.cart-hero {
+    height: 220px;
+    background: linear-gradient(135deg, #0b0f1a, #1c1c2c);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 0 0 15px rgba(93,169,233,0.7);
+}
+.cart-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #5da9e9;
+    margin-bottom: 10px;
+}
+.cart-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.7);
+}
+
+/* CART CARD */
+.cart-card {
+    background: #1C1C2C;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.cart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(93,169,233,0.5);
+}
+
+.cart-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-right: 2px solid #5da9e9;
+}
+
+.cart-product-info {
+    padding: 25px;
+    background: linear-gradient(to right, rgba(11,15,26,0.85), rgba(11,15,26,0.95));
+}
+
+.weapon-name {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #5da9e9;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(93,169,233,0.6);
+}
+.weapon-description {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 15px;
+}
+
+.sale-pricing .old-price {
+    text-decoration: line-through;
+    color: #b2bec3;
+    margin-right: 10px;
+}
+.sale-pricing .sale-price {
+    color: #ff6b6b;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+.sale-pricing .limited-offer {
+    color: #ffd700;
+    font-weight: 700;
+}
+
+.regular-price {
+    color: #5da9e9;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* HONKAI BUTTONS */
+.btn-honkai {
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(93,169,233,0.5);
+    border: none;
+}
+.btn-honkai:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(93,169,233,0.7);
+}
+
+/* Update Button from Product Card */
+.btn-outline-info {
+    border: 2px solid #5da9e9;
+    color: #5da9e9;
+    background: transparent;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 12px;
+    padding: 10px 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(93,169,233,0.5);
+}
+
+.btn-outline-info:hover {
+    background: #5da9e9;
+    color: #0b0f1a;
+    box-shadow: 0 0 25px rgba(93,169,233,0.7);
+}
+
+.btn-danger {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 12px;
+    padding: 10px 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(255,107,107,0.5);
+}
+
+.btn-danger:hover {
+    background: #ee5a24;
+    box-shadow: 0 0 25px rgba(255,107,107,0.7);
+}
+
+.btn-checkout {
+    background: linear-gradient(135deg, #00cec9, #00b894);
+    color: white;
+}
+
+/* Glowing Total Panel */
+.total-panel {
+    background: rgba(11,15,26,0.85);
+    border: 2px solid #5da9e9;
+    box-shadow: 0 0 25px rgba(93,169,233,0.7);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .cart-card {
+        flex-direction: column;
+    }
+    .cart-product-img {
+        height: 250px;
+        border-right: none;
+        border-bottom: 2px solid #5da9e9;
+    }
+    .cart-product-info {
+        text-align: center;
+    }
+}
+</style>
+
+<!-- ================= JS ================= -->
+<script>
+// ================= CREATE TOAST CONTAINER IF NOT EXISTS =================
+$(document).ready(function() {
+    if (!$('#honkai-messages').length) {
+        $('body').append('<div id="honkai-messages"></div>');
+    }
+});
+
+// ================= HONKAI TOAST HELPER =================
+function showHonkaiToast(msg, tag){
+    // Create toast container if it doesn't exist
+    if (!$('#honkai-messages').length) {
+        $('body').append('<div id="honkai-messages"></div>');
+    }
+
+    var toast = $(`
+        <div class="honkai-toast ${tag}">
+            ${msg}<span class="close-toast">&times;</span>
+        </div>
+    `);
+    $('#honkai-messages').append(toast);
+
+    // Close button click
+    toast.find('.close-toast').on('click', function(){
+        toast.remove();
+    });
+
+    // Animate in
+    toast.css({opacity:0, transform:'translateX(100%)'})
+         .animate({opacity:1}, 500)
+         .css({transform:'translateX(0)'});
+
+    // Auto remove after 5 seconds
+    setTimeout(function(){
+        toast.fadeOut(500, function(){
+            toast.remove();
+        });
+    }, 5000);
+}
+
+// ================= UPDATE CART QUANTITY =================
+$(document).on('click', '.update-cart', function(e){
+    e.preventDefault();
+    var productId = $(this).data('index');
+    var quantity = $('#select' + productId + ' option:selected').text();
+
+    console.log('Updating cart:', productId, quantity); // Debug
+
+    $.ajax({
+        type: 'POST',
+        url: '{% url "cart_update" %}',
+        data: {
+            product_id: productId,
+            product_qty: quantity,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response){
+            console.log('Update success:', response); // Debug
+            showHonkaiToast(response.message, response.tag);
+
+            // Update cart badge if exists
+            if ($('#cart_quantity').length) {
+                $('#cart_quantity').text(response.qty);
+            }
+
+            // Update total display
+            if (response.total && $('.total-panel h3').length) {
+                $('.total-panel h3').text('Total: ₱' + response.total.toFixed(2));
+            }
+        },
+        error: function(xhr, status, error){
+            console.error('Update error:', error); // Debug
+            showHonkaiToast('Error updating cart!', 'error');
+        }
+    });
+});
+
+// ================= REMOVE ITEM FROM CART =================
+$(document).on('click', '.delete-product', function(e){
+    e.preventDefault();
+    var productId = $(this).data('index');
+    var $cartCard = $(this).closest('.cart-card');
+
+    console.log('Removing product:', productId); // Debug
+
+    $.ajax({
+        type: 'POST',
+        url: '{% url "cart_delete" %}',
+        data: {
+            product_id: productId,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response){
+            console.log('Delete success:', response); // Debug
+
+            if (response.success) {
+                showHonkaiToast(response.message, response.tag);
+
+                // Fade out and remove the card
+                $cartCard.fadeOut(400, function() {
+                    $(this).remove();
+
+                    // Update cart badge
+                    if ($('#cart_quantity').length) {
+                        $('#cart_quantity').text(response.qty);
+                    }
+
+                    // Update total
+                    if (response.total !== undefined && $('.total-panel h3').length) {
+                        $('.total-panel h3').text('Total: ₱' + response.total.toFixed(2));
+                    }
+
+                    // If cart is empty, reload page to show empty message
+                    if (response.qty === 0) {
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    }
+                });
+            } else {
+                showHonkaiToast(response.message || 'Failed to remove item', 'error');
+            }
+        },
+        error: function(xhr, status, error){
+            console.error('Delete error:', error, xhr.responseText); // Debug
+            showHonkaiToast('Error removing item from cart!', 'error');
+        }
+    });
+});
+</script>
+
+{% endblock %}

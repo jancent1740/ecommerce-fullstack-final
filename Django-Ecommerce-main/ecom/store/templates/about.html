@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ================= HERO SECTION ================= -->
+<header class="about-hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+
+    <div class="container px-4 px-lg-5 h-100 hero-content">
+        <div class="text-center text-white">
+            <h1 class="hero-title display-4 fw-bolder">About Us...</h1>
+            <p class="hero-subtitle mt-3">Welcome To Hoyoverse Hidden Inventory</p>
+        </div>
+    </div>
+</header>
+
+<!-- ================= ABOUT SECTION ================= -->
+<section class="about-section py-5 bg-dark">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-white">
+                <p class="about-text" align="justify">
+Welcome, Captain.<br><br>
+This armory is not merely a shop, but a sanctum where legends are preserved and destiny is forged. Within these halls rest weapons that have transcended the ordinary—PRI‑ARMs, relics of forgotten ages, and tools imbued with the very essence of battle. Each blade, lance, scythe, and chakram carries the weight of history, the echoes of past heroes, and the promise of those yet to rise.<br><br>
+Here, you are not simply purchasing a weapon; you are claiming a fragment of eternity. The spear that cleaves the heavens, the scythe that bends time, the javelin that illuminates the battlefield—they do more than deal damage. They are extensions of your will, companions in your trials, and symbols of your courage. Every swing, every thrust, every strike you make will resonate through the chronicles of the Honkai.<br><br>
+Our mission is to ensure that when you step onto the battlefield, you do so with arms worthy of legends. We curate only the finest, battle-tested armaments, honoring the myths and memories woven into their very core. Each weapon you wield carries a story of sacrifice, conquest, and unwavering hope—a story that now becomes a part of your own.<br><br>
+May every Captain who walks these halls find strength, purpose, and glory. May your enemies falter, your allies thrive, and your journey be written among the stars. And above all, may all the beauty be blessed.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+.about-hero {
+    position: relative;
+    height: 300px;
+    background: #0b0f1a;
+    overflow: hidden;
+}
+
+.about-hero .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(11,15,26,0.85), rgba(11,15,26,0.95)),
+        url("{% static 'assets/Background.jpg' %}") center/cover no-repeat;
+    z-index: 0;
+}
+
+.about-hero .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(93,169,233,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(93,169,233,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 1;
+}
+
+.about-hero .hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(93,169,233,0.9);
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 1px;
+}
+
+.about-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 0 8px rgba(93,169,233,0.2);
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Search Header -->
+<header style="position: relative; height: 300px;">
+    <div style="
+        position:absolute; inset:0;
+        background: linear-gradient(
+            rgba(11,15,26,0.85),
+            rgba(11,15,26,0.85)
+        ),
+        url('{% static "assets/Background.jpg" %}') center/cover no-repeat;
+        z-index:0;">
+    </div>
+
+    <div class="container px-4 px-lg-5 h-100 d-flex align-items-center justify-content-center"
+         style="position:relative; z-index:1;">
+        <div class="text-center text-white">
+            <h1 class="display-5 fw-bolder glow-title">Weapon Search Terminal</h1>
+            <p class="lead text-white-50 mb-0">
+                Scan the Armory Database
+            </p>
+        </div>
+    </div>
+</header>
+
+<!-- Search Panel -->
+<section class="py-5">
+    <div class="container px-4 px-lg-5">
+
+        <!-- Search Box -->
+        <div class="search-terminal mb-5">
+            <form method="POST" action="{% url 'search' %}">
+                {% csrf_token %}
+                <div class="terminal-header">
+                    <i class="bi bi-radar"></i> Search Weapons
+                </div>
+
+                <div class="terminal-body">
+                    <input type="text"
+                           name="searched"
+                           class="terminal-input"
+                           placeholder="Enter weapon name, type, or keyword…">
+
+                    <button type="submit" class="terminal-btn">
+                        <i class="bi bi-search"></i> Execute Scan
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results -->
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+            {% if searched %}
+                {% for product in searched %}
+                    {% if product.is_sale %}
+                    <!-- Sale Weapon -->
+                    <div class="col mb-5">
+                        <div class="weapon-card sale">
+                            <div class="sale-badge">LIMITED</div>
+
+                            <img src="{{ product.image.url }}" class="weapon-img">
+
+                            <div class="weapon-body text-center">
+                                <h5 class="weapon-name">{{ product.name }}</h5>
+
+                                <div class="sale-indicator">
+                                    <i class="bi bi-star-fill"></i>
+                                    Limited Offer
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+
+                                <div class="price">
+                                    <span class="old">${{ product.price }}</span>
+                                    <span class="new">${{ product.sale_price }}</span>
+                                </div>
+                            </div>
+
+                            <a href="{% url 'product' product.id %}" class="weapon-btn sale-btn">
+                                View Weapon
+                            </a>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <!-- Regular Weapon -->
+                    <div class="col mb-5">
+                        <div class="weapon-card">
+                            <img src="{{ product.image.url }}" class="weapon-img">
+
+                            <div class="weapon-body text-center">
+                                <h5 class="weapon-name">{{ product.name }}</h5>
+                                <div class="price regular">
+                                    ${{ product.price }}
+                                </div>
+                            </div>
+
+                            <a href="{% url 'product' product.id %}" class="weapon-btn">
+                                View Weapon
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+<style>
+/* Header */
+.glow-title {
+    text-shadow: 0 0 20px rgba(93,169,233,0.9);
+}
+
+/* Search Terminal */
+.search-terminal {
+    background: linear-gradient(135deg, #0b0f1a, #12182b);
+    border-radius: 20px;
+    border: 1px solid rgba(93,169,233,0.3);
+    box-shadow: 0 0 30px rgba(93,169,233,0.25);
+    overflow: hidden;
+}
+
+.terminal-header {
+    padding: 15px 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #5da9e9;
+    background: rgba(93,169,233,0.1);
+}
+
+.terminal-body {
+    padding: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+.terminal-input {
+    flex: 1;
+    background: #0b0f1a;
+    border: 1px solid rgba(93,169,233,0.4);
+    color: white;
+    padding: 14px 18px;
+    border-radius: 12px;
+}
+
+.terminal-input::placeholder {
+    color: #aaa;
+}
+
+.terminal-btn {
+    background: linear-gradient(135deg, #5da9e9, #667eea);
+    color: white;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.terminal-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(93,169,233,0.6);
+}
+
+/* Weapon Cards */
+.weapon-card {
+    background: #1c1c2c;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.weapon-card:hover {
+    transform: translateY(-10px);
+}
+
+.weapon-card.sale {
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 25px rgba(255,215,0,0.4);
+}
+
+.sale-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.weapon-img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+}
+
+.weapon-body {
+    padding: 20px;
+}
+
+.weapon-name {
+    color: white;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.sale-indicator {
+    color: #ffd700;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.price .old {
+    color: #aaa;
+    text-decoration: line-through;
+    margin-right: 8px;
+}
+
+.price .new {
+    color: #ff6b6b;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.price.regular {
+    color: #5da9e9;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.weapon-btn {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.weapon-btn:hover {
+    background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+.sale-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+}
+
+.sale-btn:hover {
+    background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+}
+</style>
+
+{% endblock %}

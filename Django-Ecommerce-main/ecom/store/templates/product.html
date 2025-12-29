@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ================= PRODUCT HERO ================= -->
+<section class="product-hero position-relative">
+
+    <!-- Full background image -->
+    <div class="product-bg" style="background-image: url('{{ product.image.url }}');"></div>
+
+    <!-- Gradient overlay -->
+    <div class="product-overlay"></div>
+
+    <div class="container-fluid px-0">
+        <div class="row g-0 align-items-center">
+
+            <!-- Left Column: Small weapon image -->
+            <div class="col-md-4 d-flex justify-content-center py-4">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="weapon-img-small">
+            </div>
+
+            <!-- Right Column: Product Info -->
+            <div class="col-md-8 product-info-side text-white d-flex flex-column justify-content-center">
+                <div class="product-content px-4 px-md-5 text-center text-md-start">
+                    <h1 class="weapon-name">{{ product.name }}</h1>
+                    <p class="weapon-description">{{ product.description }}</p>
+
+                    {% if product.is_sale %}
+                        <div class="sale-info mb-3">
+                            <span class="old-price">₱{{ product.price }}</span>
+                            <span class="sale-price">₱{{ product.sale_price }}</span>
+                            <div class="limited-offer">Limited Time Offer!</div>
+                        </div>
+                    {% else %}
+                        <div class="regular-price mb-3">₱{{ product.price }}</div>
+                    {% endif %}
+
+                    <!-- Quantity -->
+                    <div class="d-flex align-items-center mb-4 justify-content-center justify-content-md-start">
+                        <label for="qty-cart" class="me-2 fw-bold">Quantity:</label>
+                        <select class="form-select form-select-sm w-auto" id="qty-cart">
+                            {% for i in quantity_range %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-3 flex-wrap justify-content-center justify-content-md-start">
+                        <a href="{% url 'home' %}" class="btn btn-neon btn-outline-light">Back Home</a>
+<button type="button" class="btn btn-outline-info add-to-cart" data-product-id="{{ product.id }}">
+    Add to Cart
+</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+/* Hero Section */
+.product-hero {
+    min-height: 80vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Full background image */
+.product-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    filter: brightness(0.45);
+}
+
+/* Full gradient overlay */
+.product-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(11,15,26,0.6), rgba(11,15,26,0.95));
+    z-index: 1;
+}
+
+/* Right side info */
+.product-info-side {
+    position: relative;
+    z-index: 2;
+    padding: 40px 30px;
+}
+
+/* Small weapon image */
+.weapon-img-small {
+    position: relative;
+    z-index: 3;
+    max-width: 90%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+/* Text Styles */
+.weapon-name {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #5da9e9;
+    text-shadow: 0 0 20px rgba(93,169,233,0.8);
+    margin-bottom: 20px;
+}
+
+.weapon-description {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.sale-info .old-price {
+    text-decoration: line-through;
+    color: #b2bec3;
+    margin-right: 12px;
+    font-weight: 600;
+}
+
+.sale-info .sale-price {
+    color: #ff6b6b;
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+.sale-info .limited-offer {
+    color: #ffd700;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.regular-price {
+    color: #5da9e9;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+#qty-cart {
+    background: #1c1c2c;
+    color: white;
+    border: 1px solid #5da9e9;
+    border-radius: 8px;
+}
+
+/* Buttons */
+.btn-neon {
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(93,169,233,0.5);
+}
+
+.btn-neon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(93,169,233,0.8);
+}
+
+.btn-neon.btn-primary {
+    background: linear-gradient(135deg, #5da9e9, #667eea);
+    color: white;
+    border: none;
+}
+
+.btn-neon.btn-primary:hover {
+    background: linear-gradient(135deg, #667eea, #5da9e9);
+}
+
+.btn-neon.btn-outline-light {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.btn-neon.btn-outline-light:hover {
+    color: #0b0f1a;
+    background: white;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .product-hero {
+        flex-direction: column;
+        text-align: center;
+    }
+    .weapon-img-small {
+        max-width: 60%;
+        margin-bottom: 20px;
+    }
+    .product-info-side {
+        padding: 30px 20px;
+    }
+}
+</style>
+
+<!-- ================= JS ================= -->
+<script>
+$(document).ready(function() {
+    // Create toast container if doesn't exist
+    if (!$('#honkai-messages').length) {
+        $('body').append('<div id="honkai-messages"></div>');
+    }
+
+    // ================= ADD TO CART =================
+    $(document).on('click', '.add-to-cart', function(e){
+        e.preventDefault();
+
+        var productId = $(this).data('product-id');
+        var qty = $('#qty-cart').val() || 1;
+
+        console.log('Adding to cart:', productId, qty); // Debug
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "cart_update" %}',
+            data: {
+                product_id: productId,
+                product_qty: qty,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response){
+                console.log('Add success:', response); // Debug
+
+                // Update cart badge
+                if ($('#cart_quantity').length) {
+                    $('#cart_quantity').text(response.qty);
+                }
+
+                // Show toast
+                showHonkaiToast(response.message, response.tag);
+            },
+            error: function(xhr, status, error){
+                console.error('Add error:', error); // Debug
+                showHonkaiToast('Error adding product to cart!', 'error');
+            }
+        });
+    });
+
+    // ================= TOAST HELPER =================
+    function showHonkaiToast(msg, tag){
+        if (!$('#honkai-messages').length) {
+            $('body').append('<div id="honkai-messages"></div>');
+        }
+
+        var toast = $(`
+            <div class="honkai-toast ${tag}">
+                ${msg}<span class="close-toast">&times;</span>
+            </div>
+        `);
+        $('#honkai-messages').append(toast);
+
+        toast.find('.close-toast').on('click', function(){
+            toast.remove();
+        });
+
+        toast.css({opacity:0, transform:'translateX(100%)'})
+             .animate({opacity:1}, 500)
+             .css({transform:'translateX(0)'});
+
+        setTimeout(function(){
+            toast.fadeOut(500, function(){
+                toast.remove();
+            });
+        }, 5000);
+    }
+});
+</script>
+{% endblock %}

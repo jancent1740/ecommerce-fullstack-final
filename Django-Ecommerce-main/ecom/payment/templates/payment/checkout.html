@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- ================= HERO ================= -->
+<header class="checkout-hero">
+    <div class="container text-center text-white">
+        <h1 class="checkout-title">CHECKOUT PROTOCOL</h1>
+        <p class="checkout-subtitle">Review Loadout & Enter Shipping Coordinates</p>
+    </div>
+</header>
+
+<div class="container my-5">
+
+    <!-- ================= ORDER SUMMARY ================= -->
+    <div class="card honkai-card mb-4">
+        <div class="card-header">Order Summary</div>
+        <div class="card-body">
+
+            {% for product in cart_products %}
+                <div class="d-flex justify-content-between mb-2">
+                    <strong>{{ product.name }}</strong>
+                    <span>
+                        {% if product.is_sale %}
+                            ₱{{ product.sale_price }}
+                        {% else %}
+                            ₱{{ product.price }}
+                        {% endif %}
+                    </span>
+                </div>
+
+                <small class="text-info">
+                    Quantity:
+                    {% for key, value in quantities.items %}
+                        {% if key == product.id|slugify %}
+                            {{ value }}
+                        {% endif %}
+                    {% endfor %}
+                </small>
+                <hr class="divider">
+            {% endfor %}
+
+            <div class="text-end fw-bold text-warning">
+                TOTAL: ₱{{ totals }}
+            </div>
+
+            <a href="{% url 'cart_summary' %}" class="btn btn-outline-info btn-sm mt-3">
+                Modify Loadout
+            </a>
+        </div>
+    </div>
+
+    <!-- ================= SHIPPING FORM ================= -->
+    <div class="card honkai-card">
+        <div class="card-header">Shipping Coordinates</div>
+        <div class="card-body">
+
+            <form method="POST" action="{% url 'billing_info' %}">
+                {% csrf_token %}
+                {{ shipping_form.as_p }}
+
+                <button type="submit" class="btn btn-neon-primary w-100 mt-3">
+                    Continue to Billing
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= STYLES ================= -->
+<style>
+.checkout-hero {
+    background: radial-gradient(circle at center, #101728, #05070d);
+    padding: 80px 0;
+    border-bottom: 2px solid #5da9e9;
+}
+
+.checkout-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #5da9e9;
+    text-shadow: 0 0 25px rgba(93,169,233,.9);
+}
+
+.checkout-subtitle {
+    color: rgba(255,255,255,.7);
+    letter-spacing: 1px;
+}
+
+.honkai-card {
+    background: #0b0f1a;
+    border: 1px solid rgba(93,169,233,.4);
+    box-shadow: 0 0 25px rgba(93,169,233,.15);
+    color: white;
+}
+
+.honkai-card .card-header {
+    background: rgba(93,169,233,.08);
+    border-bottom: 1px solid rgba(93,169,233,.3);
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.divider {
+    border-color: rgba(93,169,233,.2);
+}
+
+.btn-neon-primary {
+    background: linear-gradient(135deg, #5da9e9, #667eea);
+    border: none;
+    font-weight: 800;
+    letter-spacing: 1px;
+    box-shadow: 0 0 25px rgba(93,169,233,.6);
+}
+
+.btn-neon-primary:hover {
+    box-shadow: 0 0 40px rgba(93,169,233,.9);
+}
+</style>
+
+{% endblock %}

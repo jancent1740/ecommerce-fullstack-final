@@ -1,0 +1,190 @@
+<!-- Honkai Impact 3rd Navbar -->
+<nav class="navbar navbar-expand-lg honkai-navbar">
+    <div class="container px-4 px-lg-5">
+
+        <!-- Brand -->
+        <a class="navbar-brand honkai-brand" href="{% url 'home' %}">
+            <span class="brand-glow">DIVINE ARMORY</span>
+        </a>
+
+        <button class="navbar-toggler text-white" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <!-- Left Links -->
+            <ul class="navbar-nav me-auto ms-lg-4">
+
+                <li class="nav-item">
+                    <a class="nav-link honkai-link" href="{% url 'home' %}">
+                        <i class="bi bi-house-door-fill"></i> Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link honkai-link" href="{% url 'search' %}">
+                        <i class="bi bi-search"></i> Search
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link honkai-link" href="{% url 'about' %}">
+                        <i class="bi bi-info-circle-fill"></i> About
+                    </a>
+                </li>
+
+                <!-- Categories -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle honkai-link" data-bs-toggle="dropdown">
+                        <i class="bi bi-grid-fill"></i> Armory
+                    </a>
+                    <ul class="dropdown-menu honkai-dropdown">
+                        <li><a class="dropdown-item" href="{% url 'category_summary' %}">All Weapons</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'Pistol' %}">Dual Pistols</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'Katana' %}">Katana</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'Cannon' %}">Cannon</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Right Links -->
+            <ul class="navbar-nav ms-auto">
+
+                {% if user.is_authenticated %}
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle honkai-link" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-badge-fill"></i> Commander
+                    </a>
+                    <ul class="dropdown-menu honkai-dropdown">
+                        <li><a class="dropdown-item" href="{% url 'update_user' %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'update_info' %}">User Info</a></li>
+                    </ul>
+                </li>
+
+                {% if user.is_superuser %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle honkai-link" data-bs-toggle="dropdown">
+                        <i class="bi bi-clipboard-data-fill"></i> Orders
+                    </a>
+                    <ul class="dropdown-menu honkai-dropdown">
+                        <li><a class="dropdown-item" href="{% url 'shipped_dash' %}">Shipped</a></li>
+                        <li><a class="dropdown-item" href="{% url 'not_shipped_dash' %}">Unshipped</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link honkai-link logout-link" href="{% url 'logout' %}">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </li>
+
+                {% else %}
+
+                <li class="nav-item">
+                    <a class="nav-link honkai-link" href="{% url 'login' %}">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link honkai-link register-link" href="{% url 'register' %}">
+                        <i class="bi bi-person-plus-fill"></i> Register
+                    </a>
+                </li>
+
+                {% endif %}
+
+                <!-- Cart -->
+                <li class="nav-item ms-3">
+                    <a href="{% url 'cart_summary' %}" class="honkai-cart-btn">
+                        <i class="bi bi-bag-fill"></i>
+                        <span class="cart-count">{{ cart|length }}</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<style>
+/* Honkai Navbar */
+.honkai-navbar {
+    background: linear-gradient(135deg, #0b0f1a, #12182b);
+    border-bottom: 1px solid rgba(93, 169, 233, 0.3);
+    box-shadow: 0 0 25px rgba(93, 169, 233, 0.2);
+}
+
+.honkai-brand {
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #5da9e9 !important;
+    font-size: 20px;
+}
+
+.brand-glow {
+    text-shadow: 0 0 15px rgba(93, 169, 233, 0.8);
+}
+
+.honkai-link {
+    color: #eaeaea !important;
+    font-weight: 600;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.honkai-link:hover {
+    color: #5da9e9 !important;
+    text-shadow: 0 0 10px rgba(93, 169, 233, 0.7);
+}
+
+.honkai-dropdown {
+    background: #0b0f1a;
+    border: 1px solid rgba(93, 169, 233, 0.3);
+}
+
+.honkai-dropdown .dropdown-item {
+    color: #ddd;
+    transition: all 0.3s ease;
+}
+
+.honkai-dropdown .dropdown-item:hover {
+    background: rgba(93, 169, 233, 0.15);
+    color: #5da9e9;
+}
+
+/* Cart Button */
+.honkai-cart-btn {
+    position: relative;
+    color: #ffd700;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.cart-count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: #ff4757;
+    color: white;
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+/* Special Links */
+.logout-link {
+    color: #ff6b6b !important;
+}
+
+.register-link {
+    color: #ffd700 !important;
+}
+</style>
